@@ -1,5 +1,7 @@
 # El Truco - QBasic (1992)
 
+*[Read in English](README_EN.md)*
+
 Juego de Truco argentino escrito en QBasic por **Javier A. Cordero**, a los 16 años, en una PC 286 con placa Sound Blaster.
 
 ![QBasic](https://img.shields.io/badge/QBasic-MS--DOS-blue)
