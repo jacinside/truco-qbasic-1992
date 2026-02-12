@@ -6,6 +6,12 @@ Juego de Truco argentino escrito en QBasic por **Javier A. Cordero**, a los 16 a
 ![Year](https://img.shields.io/badge/A%C3%B1o-1992-green)
 ![Platform](https://img.shields.io/badge/Platform-DOS%20%2F%20DOSBox-orange)
 
+## Screenshots
+
+| Pantalla de inicio | Partida en juego | Truco cantado |
+|---|---|---|
+| ![Intro](TRUCO2-intro.png) | ![Juego 1](TRUCO2-juego1.png) | ![Juego 2](TRUCO2-juego2.png) |
+
 ## Sobre el juego
 
 Un juego completo de Truco argentino contra la computadora, con:
