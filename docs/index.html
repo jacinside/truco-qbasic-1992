@@ -149,20 +149,22 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
     <script>
         Dos(document.getElementById("jsdos"), {
-            url: "truco.jsdos?v=13",
+            url: "truco.jsdos?v=14",
             autoStart: true,
-            kiosk: true
+            noCloud: true,
+            noNetworking: true,
+            thinSidebar: true
         });
 
         function sendKey(key) {
-            var el = document.querySelector("#jsdos canvas, #jsdos iframe, #jsdos");
+            // Enviar a document para que funcione siempre, incluso después de perder foco
             var opts = { key: key, bubbles: true, cancelable: true };
             if (key === "Enter") { opts.keyCode = 13; opts.code = "Enter"; }
             else if (key === "Escape") { opts.keyCode = 27; opts.code = "Escape"; }
             else { opts.keyCode = key.toUpperCase().charCodeAt(0); opts.code = "Key" + key.toUpperCase(); }
-            el.dispatchEvent(new KeyboardEvent("keydown", opts));
+            document.dispatchEvent(new KeyboardEvent("keydown", opts));
             setTimeout(function() {
-                el.dispatchEvent(new KeyboardEvent("keyup", opts));
+                document.dispatchEvent(new KeyboardEvent("keyup", opts));
             }, 80);
         }
 
