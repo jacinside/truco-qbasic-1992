@@ -63,7 +63,7 @@
         <p>por Javier A. Cordero &mdash; <a href="https://github.com/jacinside/truco-qbasic-1992">GitHub</a></p>
     </header>
 
-    <div id="jsdos"></div>
+    <div id="jsdos" tabindex="0"></div>
 
     <div class="controls">
         <table>
@@ -79,7 +79,14 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
     <script>
         emulators.pathPrefix = "./";
-        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=7");
+        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=8");
+
+        document.getElementById("jsdos").addEventListener("click", function() {
+            var canvas = this.querySelector("canvas");
+            if (canvas) canvas.focus();
+            var iframe = this.querySelector("iframe");
+            if (iframe) iframe.focus();
+        });
     </script>
 </body>
 </html>
