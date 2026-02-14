@@ -79,32 +79,20 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
     <script>
         emulators.pathPrefix = "./";
-        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=10");
+        var dosInstance = Dos(document.getElementById("jsdos"));
+        var ci = null;
 
-        function refocusEmulator() {
-            var el = document.getElementById("jsdos");
-            var canvas = el.querySelector("canvas");
-            if (canvas) { canvas.setAttribute("tabindex", "0"); canvas.focus(); return; }
-            var iframe = el.querySelector("iframe");
-            if (iframe) { iframe.focus(); return; }
-            el.focus();
-        }
-
-        function releaseModifiers() {
-            var canvas = document.querySelector("#jsdos canvas");
-            if (!canvas) return;
-            ["Alt", "Control", "Shift", "Meta"].forEach(function(key) {
-                canvas.dispatchEvent(new KeyboardEvent("keyup", {key: key, bubbles: true}));
-            });
-        }
+        dosInstance.run("truco.jsdos?v=11").then(function(instance) {
+            ci = instance;
+        });
 
         window.addEventListener("focus", function() {
-            releaseModifiers();
-            setTimeout(refocusEmulator, 100);
-        });
-        document.addEventListener("click", function() {
-            releaseModifiers();
-            refocusEmulator();
+            if (ci) {
+                try {
+                    ci.pause();
+                    setTimeout(function() { ci.resume(); }, 200);
+                } catch(e) {}
+            }
         });
     </script>
 </body>
