@@ -79,7 +79,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
     <script>
         emulators.pathPrefix = "./";
-        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=9");
+        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=10");
 
         function refocusEmulator() {
             var el = document.getElementById("jsdos");
@@ -90,15 +90,21 @@
             el.focus();
         }
 
-        window.addEventListener("focus", function() { setTimeout(refocusEmulator, 100); });
-        document.addEventListener("click", refocusEmulator);
+        function releaseModifiers() {
+            var canvas = document.querySelector("#jsdos canvas");
+            if (!canvas) return;
+            ["Alt", "Control", "Shift", "Meta"].forEach(function(key) {
+                canvas.dispatchEvent(new KeyboardEvent("keyup", {key: key, bubbles: true}));
+            });
+        }
 
-        document.addEventListener("keydown", function(e) {
-            var tag = document.activeElement && document.activeElement.tagName;
-            if (tag !== "CANVAS" && tag !== "IFRAME") {
-                refocusEmulator();
-                e.preventDefault();
-            }
+        window.addEventListener("focus", function() {
+            releaseModifiers();
+            setTimeout(refocusEmulator, 100);
+        });
+        document.addEventListener("click", function() {
+            releaseModifiers();
+            refocusEmulator();
         });
     </script>
 </body>
