@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Truco - QBasic (1992)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -32,11 +33,6 @@
             width: 640px;
             height: 400px;
             max-width: 95vw;
-        }
-        #loading {
-            color: #e94560;
-            font-size: 1rem;
-            margin: 1rem;
         }
         .reload-btn {
             margin: 0.5rem;
@@ -78,8 +74,7 @@
         <p>por Javier A. Cordero &mdash; <a href="https://github.com/jacinside/truco-qbasic-1992">GitHub</a></p>
     </header>
 
-    <canvas id="jsdos" width="640" height="400"></canvas>
-    <div id="loading">Cargando...</div>
+    <div id="jsdos"></div>
 
     <button class="reload-btn" onclick="location.reload()">Recargar (si las teclas no responden)</button>
 
@@ -94,50 +89,11 @@
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-dos@6.22.60/dist/js-dos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
     <script>
-        var loading = document.getElementById("loading");
-
-        Dos(document.getElementById("jsdos"), {
-            wdosboxUrl: "wdosbox.js",
-            autolock: false,
-        }).ready(function(fs, main) {
-            loading.textContent = "Descargando juego...";
-
-            // Bypass fs.extract() which crashes due to _exit in WASM extract_zip.
-            // Instead, use JSZip to extract in JavaScript and fs.createFile() to write files.
-            fetch("truco.jsdos")
-                .then(function(resp) { return resp.arrayBuffer(); })
-                .then(function(data) {
-                    loading.textContent = "Extrayendo archivos...";
-                    return JSZip.loadAsync(data);
-                })
-                .then(function(zip) {
-                    var promises = [];
-                    zip.forEach(function(path, entry) {
-                        if (!entry.dir) {
-                            promises.push(
-                                entry.async("uint8array").then(function(content) {
-                                    fs.createFile("/" + path, content);
-                                })
-                            );
-                        }
-                    });
-                    return Promise.all(promises);
-                })
-                .then(function() {
-                    loading.textContent = "Iniciando DOSBox...";
-                    return main(["-conf", "/dosbox.conf"]);
-                })
-                .then(function(ci) {
-                    loading.style.display = "none";
-                })
-                .catch(function(err) {
-                    loading.textContent = "Error: " + err;
-                    console.error("Error:", err);
-                });
-        });
+        // WASM files in versioned path to avoid browser cache contamination
+        emulators.pathPrefix = "v7/";
+        Dos(document.getElementById("jsdos")).run("truco.jsdos");
     </script>
 </body>
 </html>
