@@ -149,7 +149,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
     <script>
         Dos(document.getElementById("jsdos"), {
-            url: "truco.jsdos?v=17",
+            url: "truco.jsdos?v=18",
             autoStart: true,
             noCloud: true,
             noNetworking: true,
@@ -168,32 +168,49 @@
             }, 80);
         }
 
-        // Desbloquear audio en mobile (browsers bloquean AudioContext hasta user gesture)
-        var audioUnlocked = false;
-        function unlockAudio() {
-            if (audioUnlocked) return;
-            var ctx = window.AudioContext || window.webkitAudioContext;
-            if (ctx) {
-                var ac = new ctx();
-                ac.resume().then(function() { ac.close(); });
+        // Resumir todos los AudioContext (mobile los suspende al perder foco)
+        function resumeAudio() {
+            var contexts = window._audioContexts || [];
+            // Buscar AudioContext en el scope global
+            var AC = window.AudioContext || window.webkitAudioContext;
+            if (AC && AC.prototype && AC.prototype.resume) {
+                // Monkey-patch para capturar futuros AudioContext
+                if (!window._acPatched) {
+                    var origAC = AC;
+                    window._audioContexts = [];
+                    var patchedAC = function() {
+                        var ctx = new origAC();
+                        window._audioContexts.push(ctx);
+                        return ctx;
+                    };
+                    patchedAC.prototype = origAC.prototype;
+                    window.AudioContext = patchedAC;
+                    if (window.webkitAudioContext) window.webkitAudioContext = patchedAC;
+                    window._acPatched = true;
+                }
             }
-            // Resumir todos los AudioContext existentes
-            if (typeof Emulator !== "undefined" && Emulator.audioContext) {
-                Emulator.audioContext.resume();
-            }
-            audioUnlocked = true;
+            // Resumir todos los contextos capturados
+            (window._audioContexts || []).forEach(function(ctx) {
+                if (ctx.state === "suspended") ctx.resume();
+            });
         }
+
+        // Resumir audio al volver de foco (mobile suspende AudioContext)
+        document.addEventListener("visibilitychange", function() {
+            if (!document.hidden) resumeAudio();
+        });
+        window.addEventListener("focus", resumeAudio);
 
         document.querySelector(".gamepad").addEventListener("pointerdown", function(e) {
             var btn = e.target.closest("button[data-key]");
             if (!btn) return;
             e.preventDefault();
-            unlockAudio();
+            resumeAudio();
             sendKey(btn.dataset.key);
         });
 
-        // También desbloquear al tocar el emulador
-        document.getElementById("jsdos").addEventListener("pointerdown", unlockAudio);
+        // También resumir al tocar el emulador
+        document.getElementById("jsdos").addEventListener("pointerdown", resumeAudio);
     </script>
 </body>
 </html>
