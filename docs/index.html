@@ -82,16 +82,16 @@
         var dosInstance = Dos(document.getElementById("jsdos"));
         var ci = null;
 
-        dosInstance.run("truco.jsdos?v=11").then(function(instance) {
+        dosInstance.run("truco.jsdos?v=12").then(function(instance) {
             ci = instance;
         });
 
         window.addEventListener("focus", function() {
-            if (ci) {
-                try {
-                    ci.pause();
-                    setTimeout(function() { ci.resume(); }, 200);
-                } catch(e) {}
+            if (ci && ci.simulateKeyEvent) {
+                // Liberar modifiers que DOSBox cree atascados
+                ci.simulateKeyEvent(16, false); // Shift
+                ci.simulateKeyEvent(17, false); // Ctrl
+                ci.simulateKeyEvent(18, false); // Alt
             }
         });
     </script>
