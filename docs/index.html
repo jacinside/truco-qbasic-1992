@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Truco - QBasic (1992)</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.css">
+    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -31,22 +31,11 @@
         }
         #jsdos {
             width: 640px;
-            height: 400px;
+            height: 480px;
             max-width: 95vw;
         }
-        .reload-btn {
-            margin: 0.5rem;
-            padding: 0.4rem 1rem;
-            background: #e94560;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-        }
-        .reload-btn:hover { background: #c73652; }
         .controls {
-            margin: 0.5rem;
+            margin: 1rem;
             font-size: 0.8rem;
             color: #888;
             text-align: center;
@@ -76,8 +65,6 @@
 
     <div id="jsdos"></div>
 
-    <button class="reload-btn" onclick="location.reload()">Recargar (si las teclas no responden)</button>
-
     <div class="controls">
         <table>
             <tr><td>1 / 2 / 3</td><td>Tirar carta</td></tr>
@@ -89,11 +76,12 @@
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
+    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
     <script>
-        // WASM files in versioned path to avoid browser cache contamination
-        emulators.pathPrefix = "v7/";
-        Dos(document.getElementById("jsdos")).run("truco.jsdos");
+        Dos(document.getElementById("jsdos"), {
+            url: "truco.jsdos",
+            autoStart: true
+        });
     </script>
 </body>
 </html>
