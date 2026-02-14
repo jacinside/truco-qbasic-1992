@@ -79,21 +79,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
     <script>
         emulators.pathPrefix = "./";
-        var dosInstance = Dos(document.getElementById("jsdos"));
-        var ci = null;
-
-        dosInstance.run("truco.jsdos?v=16").then(function(instance) {
-            ci = instance;
-        });
-
-        window.addEventListener("focus", function() {
-            if (ci && ci.simulateKeyEvent) {
-                // Liberar modifiers que DOSBox cree atascados
-                ci.simulateKeyEvent(16, false); // Shift
-                ci.simulateKeyEvent(17, false); // Ctrl
-                ci.simulateKeyEvent(18, false); // Alt
-            }
-        });
+        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=17");
     </script>
 </body>
 </html>
