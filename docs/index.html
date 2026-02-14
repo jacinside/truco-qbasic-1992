@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>El Truco - QBasic (1992)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.css">
     <style>
@@ -18,43 +18,86 @@
         }
         header {
             text-align: center;
-            padding: 1rem;
+            padding: 0.5rem;
         }
         header h1 {
             color: #e94560;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
         header p {
             color: #999;
-            font-size: 0.85rem;
-            margin-top: 0.3rem;
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
         }
         #jsdos {
             width: 640px;
-            height: 480px;
+            height: 400px;
             max-width: 95vw;
         }
-        .controls {
-            margin: 1rem;
-            font-size: 0.8rem;
-            color: #888;
-            text-align: center;
+        .gamepad {
             max-width: 640px;
+            width: 95vw;
+            padding: 0.3rem;
+            user-select: none;
+            -webkit-user-select: none;
         }
-        .controls table {
-            margin: 0.5rem auto;
-            border-collapse: collapse;
+        .gamepad .row {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-bottom: 0.25rem;
         }
-        .controls td {
-            padding: 0.15rem 0.5rem;
-            text-align: left;
-        }
-        .controls td:first-child {
-            color: #e94560;
-            text-align: right;
+        .gamepad button {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
             font-weight: bold;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #2a2a3e;
+            color: #e0e0e0;
+            cursor: pointer;
+            touch-action: manipulation;
+            flex: 1;
+            max-width: 3.5rem;
+        }
+        .gamepad button:active {
+            background: #e94560;
+            color: white;
+        }
+        .gamepad button.accent {
+            background: #3a1a2e;
+            border-color: #e94560;
+            color: #e94560;
+        }
+        .gamepad button.accent:active {
+            background: #e94560;
+            color: white;
+        }
+        .gamepad .label {
+            font-size: 0.6rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 0.15rem;
+        }
+        .controls {
+            margin: 0.5rem;
+            font-size: 0.7rem;
+            color: #555;
+            text-align: center;
         }
         a { color: #e94560; }
+
+        @media (min-width: 700px) {
+            header { padding: 1rem; }
+            header h1 { font-size: 1.5rem; }
+            #jsdos { height: 480px; }
+            .gamepad button {
+                font-size: 1rem;
+                height: 3rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -65,22 +108,66 @@
 
     <div id="jsdos"></div>
 
+    <div class="gamepad">
+        <div class="label">Cartas / Puntos envido</div>
+        <div class="row">
+            <button data-key="1">1</button>
+            <button data-key="2">2</button>
+            <button data-key="3">3</button>
+            <button data-key="4">4</button>
+            <button data-key="5">5</button>
+            <button data-key="6">6</button>
+            <button data-key="7">7</button>
+            <button data-key="8">8</button>
+            <button data-key="9">9</button>
+            <button data-key="0">0</button>
+        </div>
+        <div class="label">Cantos</div>
+        <div class="row">
+            <button class="accent" data-key="e">E</button>
+            <button class="accent" data-key="a">A</button>
+            <button class="accent" data-key="f">F</button>
+            <button class="accent" data-key="t">T</button>
+            <button class="accent" data-key="r">R</button>
+            <button class="accent" data-key="v">V</button>
+        </div>
+        <div class="row">
+            <button class="accent" data-key="q">Q</button>
+            <button class="accent" data-key="n">N</button>
+            <button class="accent" data-key="m">M</button>
+            <button data-key="Enter">ENTER</button>
+            <button data-key="Escape">ESC</button>
+        </div>
+    </div>
+
     <div class="controls">
-        <table>
-            <tr><td>1 / 2 / 3</td><td>Tirar carta</td></tr>
-            <tr><td>E / A / F</td><td>Envido / Real envido / Falta envido</td></tr>
-            <tr><td>T / R / V</td><td>Truco / Retruco / Vale cuatro</td></tr>
-            <tr><td>Q / N</td><td>Quiero / No quiero</td></tr>
-            <tr><td>M</td><td>Me voy al mazo</td></tr>
-            <tr><td>ESC</td><td>Salir</td></tr>
-        </table>
+        E/A/F: Envido/Real/Falta &bull; T/R/V: Truco/Retruco/Vale4 &bull; Q/N: Quiero/No &bull; M: Mazo
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
     <script>
         Dos(document.getElementById("jsdos"), {
-            url: "truco.jsdos?v=10",
+            url: "truco.jsdos?v=11",
             autoStart: true
+        });
+
+        function sendKey(key) {
+            var el = document.querySelector("#jsdos canvas, #jsdos iframe, #jsdos");
+            var opts = { key: key, bubbles: true, cancelable: true };
+            if (key === "Enter") { opts.keyCode = 13; opts.code = "Enter"; }
+            else if (key === "Escape") { opts.keyCode = 27; opts.code = "Escape"; }
+            else { opts.keyCode = key.toUpperCase().charCodeAt(0); opts.code = "Key" + key.toUpperCase(); }
+            el.dispatchEvent(new KeyboardEvent("keydown", opts));
+            setTimeout(function() {
+                el.dispatchEvent(new KeyboardEvent("keyup", opts));
+            }, 80);
+        }
+
+        document.querySelector(".gamepad").addEventListener("pointerdown", function(e) {
+            var btn = e.target.closest("button[data-key]");
+            if (!btn) return;
+            e.preventDefault();
+            sendKey(btn.dataset.key);
         });
     </script>
 </body>
