@@ -146,31 +146,16 @@
         E/A/F: Envido/Real/Falta &bull; T/R/V: Truco/Retruco/Vale4 &bull; Q/N: Quiero/No &bull; M: Mazo
     </div>
 
-    <!-- Capturar AudioContext ANTES de que js-dos lo cree -->
-    <script>
-        (function() {
-            var OrigAC = window.AudioContext || window.webkitAudioContext;
-            if (!OrigAC) return;
-            window._audioContexts = [];
-            function PatchedAC() {
-                var ctx = new OrigAC();
-                window._audioContexts.push(ctx);
-                return ctx;
-            }
-            PatchedAC.prototype = OrigAC.prototype;
-            window.AudioContext = PatchedAC;
-            if (window.webkitAudioContext) window.webkitAudioContext = PatchedAC;
-        })();
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
     <script>
         Dos(document.getElementById("jsdos"), {
-            url: "truco.jsdos?v=20",
+            url: "truco.jsdos?v=19",
             autoStart: true,
             kiosk: true
         });
 
         function sendKey(key) {
+            // Enviar a document para que funcione siempre, incluso después de perder foco
             var opts = { key: key, bubbles: true, cancelable: true };
             if (key === "Enter") { opts.keyCode = 13; opts.code = "Enter"; }
             else if (key === "Escape") { opts.keyCode = 27; opts.code = "Escape"; }
@@ -181,12 +166,34 @@
             }, 80);
         }
 
+        // Resumir todos los AudioContext (mobile los suspende al perder foco)
         function resumeAudio() {
+            var contexts = window._audioContexts || [];
+            // Buscar AudioContext en el scope global
+            var AC = window.AudioContext || window.webkitAudioContext;
+            if (AC && AC.prototype && AC.prototype.resume) {
+                // Monkey-patch para capturar futuros AudioContext
+                if (!window._acPatched) {
+                    var origAC = AC;
+                    window._audioContexts = [];
+                    var patchedAC = function() {
+                        var ctx = new origAC();
+                        window._audioContexts.push(ctx);
+                        return ctx;
+                    };
+                    patchedAC.prototype = origAC.prototype;
+                    window.AudioContext = patchedAC;
+                    if (window.webkitAudioContext) window.webkitAudioContext = patchedAC;
+                    window._acPatched = true;
+                }
+            }
+            // Resumir todos los contextos capturados
             (window._audioContexts || []).forEach(function(ctx) {
                 if (ctx.state === "suspended") ctx.resume();
             });
         }
 
+        // Resumir audio al volver de foco (mobile suspende AudioContext)
         document.addEventListener("visibilitychange", function() {
             if (!document.hidden) resumeAudio();
         });
