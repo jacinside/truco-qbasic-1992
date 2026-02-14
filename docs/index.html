@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Truco - QBasic (1992)</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -74,7 +73,7 @@
         <p>por Javier A. Cordero &mdash; <a href="https://github.com/jacinside/truco-qbasic-1992">GitHub</a></p>
     </header>
 
-    <div id="jsdos"></div>
+    <canvas id="jsdos" width="640" height="400"></canvas>
 
     <button class="reload-btn" onclick="location.reload()">Recargar (si las teclas no responden)</button>
 
@@ -89,10 +88,16 @@
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-dos@6.22.60/dist/js-dos.js"></script>
     <script>
-        emulators.pathPrefix = "./";
-        Dos(document.getElementById("jsdos")).run("truco.jsdos?v=25");
+        Dos(document.getElementById("jsdos"), {
+            wdosboxUrl: "wdosbox.js",
+            autolock: false,
+        }).ready(function(fs, main) {
+            fs.extract("truco.jsdos").then(function() {
+                main(["-conf", "dosbox.conf"]);
+            });
+        });
     </script>
 </body>
 </html>
