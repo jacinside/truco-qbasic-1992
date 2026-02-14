@@ -4,6 +4,8 @@
 
 Juego de Truco argentino escrito en QBasic por **Javier A. Cordero**, a los 16 años, en una PC 286 con placa Sound Blaster.
 
+**[Jugar en el navegador](https://jacinside.github.io/truco-qbasic-1992/)**
+
 ![QBasic](https://img.shields.io/badge/QBasic-MS--DOS-blue)
 ![Year](https://img.shields.io/badge/A%C3%B1o-1992-green)
 ![Platform](https://img.shields.io/badge/Platform-DOS%20%2F%20DOSBox-orange)

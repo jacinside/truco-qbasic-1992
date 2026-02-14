@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Truco - QBasic (1992)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            text-align: center;
+            padding: 1rem;
+        }
+        header h1 {
+            color: #e94560;
+            font-size: 1.5rem;
+        }
+        header p {
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+        #jsdos {
+            width: 640px;
+            height: 400px;
+            max-width: 95vw;
+        }
+        .controls {
+            margin: 1rem;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+            max-width: 640px;
+        }
+        .controls table {
+            margin: 0.5rem auto;
+            border-collapse: collapse;
+        }
+        .controls td {
+            padding: 0.15rem 0.5rem;
+            text-align: left;
+        }
+        .controls td:first-child {
+            color: #e94560;
+            text-align: right;
+            font-weight: bold;
+        }
+        a { color: #e94560; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>El Truco - QBasic (1992)</h1>
+        <p>por Javier A. Cordero &mdash; <a href="https://github.com/jacinside/truco-qbasic-1992">GitHub</a></p>
+    </header>
+
+    <div id="jsdos"></div>
+
+    <div class="controls">
+        <table>
+            <tr><td>1 / 2 / 3</td><td>Tirar carta</td></tr>
+            <tr><td>E / A / F</td><td>Envido / Real envido / Falta envido</td></tr>
+            <tr><td>T / R / V</td><td>Truco / Retruco / Vale cuatro</td></tr>
+            <tr><td>Q / N</td><td>Quiero / No quiero</td></tr>
+            <tr><td>M</td><td>Me voy al mazo</td></tr>
+            <tr><td>ESC</td><td>Salir</td></tr>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-dos@7.5.0/dist/js-dos.js"></script>
+    <script>
+        Dos(document.getElementById("jsdos")).run("truco.jsdos");
+    </script>
+</body>
+</html>

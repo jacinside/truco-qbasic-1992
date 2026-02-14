@@ -4,6 +4,8 @@
 
 Argentine Truco card game written in QBasic by **Javier A. Cordero**, at the age of 16, on a 286 PC with a Sound Blaster card.
 
+**[Play in the browser](https://jacinside.github.io/truco-qbasic-1992/)**
+
 ![QBasic](https://img.shields.io/badge/QBasic-MS--DOS-blue)
 ![Year](https://img.shields.io/badge/Year-1992-green)
 ![Platform](https://img.shields.io/badge/Platform-DOS%20%2F%20DOSBox-orange)
