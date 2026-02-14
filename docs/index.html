@@ -116,6 +116,8 @@
             <button data-key="3">3</button>
             <button data-key="4">4</button>
             <button data-key="5">5</button>
+        </div>
+        <div class="row">
             <button data-key="6">6</button>
             <button data-key="7">7</button>
             <button data-key="8">8</button>
@@ -147,7 +149,7 @@
     <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
     <script>
         Dos(document.getElementById("jsdos"), {
-            url: "truco.jsdos?v=11",
+            url: "truco.jsdos?v=12",
             autoStart: true
         });
 
@@ -163,12 +165,32 @@
             }, 80);
         }
 
+        // Desbloquear audio en mobile (browsers bloquean AudioContext hasta user gesture)
+        var audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            var ctx = window.AudioContext || window.webkitAudioContext;
+            if (ctx) {
+                var ac = new ctx();
+                ac.resume().then(function() { ac.close(); });
+            }
+            // Resumir todos los AudioContext existentes
+            if (typeof Emulator !== "undefined" && Emulator.audioContext) {
+                Emulator.audioContext.resume();
+            }
+            audioUnlocked = true;
+        }
+
         document.querySelector(".gamepad").addEventListener("pointerdown", function(e) {
             var btn = e.target.closest("button[data-key]");
             if (!btn) return;
             e.preventDefault();
+            unlockAudio();
             sendKey(btn.dataset.key);
         });
+
+        // También desbloquear al tocar el emulador
+        document.getElementById("jsdos").addEventListener("pointerdown", unlockAudio);
     </script>
 </body>
 </html>
